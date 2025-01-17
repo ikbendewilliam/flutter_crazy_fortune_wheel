@@ -1,0 +1,11 @@
+name: flutter_crazy_fortune_wheel
+description: "A new Flutter project."
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.6.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_shaders: ^0.1.0
