@@ -2,22 +2,19 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_crazy_fortune_wheel/src/_base_wheel.dart';
-import 'package:flutter_crazy_fortune_wheel/src/color_wheel.dart';
+import 'package:flutter_crazy_fortune_wheel/src/wheel_parts/arrow_widget.dart';
+import 'package:flutter_crazy_fortune_wheel/src/wheel_parts/color_wheel.dart';
 
 class NormalWheel extends BaseWheel {
-  final int winnerIndex = 3;
-  final int rotations = 10;
-
-  /// The scaling of the wheel in case the size is not woking on your format
-  /// The default value is 1.0
-  final double scaling;
-
-  final List<Widget> children;
-
   NormalWheel({
     required super.animation,
-    required this.children,
-    this.scaling = 1,
+    required super.children,
+    super.scaling,
+    super.previousWinnerIndex,
+    super.rotations,
+    super.winnerIndex,
+    super.onEnd,
+    super.colors,
     super.key,
   });
 
@@ -31,6 +28,10 @@ class NormalWheel extends BaseWheel {
           height: 800 / scaling,
           child: AnimatedBuilder(
             animation: animation,
+            child: ColorWheel(
+              children: children,
+              colors: colors,
+            ),
             builder: (context, child) => Stack(
               clipBehavior: Clip.none,
               children: [
@@ -51,29 +52,19 @@ class NormalWheel extends BaseWheel {
                       height: 24,
                       width: 96,
                       child: ArrowWidget(
-                        rotation: _calculateArrowRotation(animation.value),
+                        animationValue: animation.value,
+                        childrenCount: children.length,
+                        rotations: rotations,
+                        winnerIndex: winnerIndex,
                       ),
                     ),
                   ),
                 ),
               ],
             ),
-            child: ColorWheel(
-              children: children,
-            ),
           ),
         ),
       ),
     );
-  }
-
-  double _calculateArrowRotation(double animationValue) {
-    var angleInFullRotation = (animationValue * 2 * pi * (rotations * children.length + winnerIndex)) % (2 * pi);
-    angleInFullRotation *= 8 / children.length; // Makes the animation work great for 3-30 children
-    return switch (angleInFullRotation) {
-      < 0.25 * pi => -angleInFullRotation,
-      < 0.5 * pi => -0.5 * pi + angleInFullRotation,
-      _ => 0,
-    };
   }
 }

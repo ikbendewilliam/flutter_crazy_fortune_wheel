@@ -9,3 +9,8 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_shaders: ^0.1.0
+  flutter_shader_snap: ^0.0.3
+
+flutter:
+  shaders:
+    - packages/flutter_shader_snap/shaders/split_snap_effect_shader.glsl

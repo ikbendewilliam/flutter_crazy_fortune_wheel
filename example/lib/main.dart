@@ -36,7 +36,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     vsync: this,
     duration: const Duration(seconds: 10),
   );
-  late final animation = controller.drive(CurveTween(curve: Cubic(.09, -0.17, .6, 1.05)));
+  late final animation = controller.drive(CurveTween(curve: FortuneWheelCurve()));
 
   @override
   void initState() {
@@ -48,67 +48,226 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     return Scaffold(
       body: Column(
         children: [
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  'Normal Wheel',
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Expanded(
+                child: Text(
+                  'Sliced Wheel',
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Expanded(
+                child: Text(
+                  'Disappearing Wheel',
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Expanded(
+                child: Text(
+                  'Random Wheel',
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
+          ),
           Expanded(
-            child: NormalWheel(
-              animation: animation,
+            child: Row(
               children: [
-                'Justin',
-                'Kevin',
-                'Sam',
-                'Kate',
-                'John',
-                'Debbie but a very long name',
-                'Sarah',
-                'Justin',
-                'Kevin',
-                'Sam',
-                'Kate',
-                'John',
-                'Debbie',
-                'Sarah',
-                'Justin',
-                'Kevin',
-                'Sam',
-                'Kate',
-                'John',
-                'Debbie',
-                'Sarah',
-                'Justin',
-                'Kevin',
-                'Sam',
-                'Kate',
-                'John',
-                'Debbie',
-                'Sarah',
-                'Debbie',
-                'Sarah',
-              ]
-                  .map(
-                    (s) => Text(
-                      s,
-                      style: const TextStyle(
-                        fontSize: 24,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  )
-                  .toList(),
+                Expanded(
+                  child: NormalWheel(
+                    animation: animation,
+                    children: childrenShort,
+                  ),
+                ),
+                Expanded(
+                  child: SlicedWheel(
+                    animation: animation,
+                    children: childrenShort,
+                  ),
+                ),
+                Expanded(
+                  child: DisappearingWheel(
+                    animation: animation,
+                    children: childrenShort,
+                  ),
+                ),
+                Expanded(
+                  child: RandomWheel(
+                    animation: animation,
+                    children: childrenShort,
+                  ),
+                ),
+              ],
             ),
           ),
-          Slider(
-            value: animation.value,
-            onChanged: (value) {
-              controller.value = value;
-            },
+          const SizedBox(height: 32),
+          Expanded(
+            child: Row(
+              children: [
+                Expanded(
+                  child: NormalWheel(
+                    animation: animation,
+                    children: childrenMedium,
+                  ),
+                ),
+                Expanded(
+                  child: SlicedWheel(
+                    animation: animation,
+                    children: childrenMedium,
+                  ),
+                ),
+                Expanded(
+                  child: DisappearingWheel(
+                    animation: animation,
+                    children: childrenMedium,
+                  ),
+                ),
+                Expanded(
+                  child: RandomWheel(
+                    animation: animation,
+                    children: childrenMedium,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 32),
+          Expanded(
+            child: Row(
+              children: [
+                Expanded(
+                  child: NormalWheel(
+                    animation: animation,
+                    children: childrenLong,
+                  ),
+                ),
+                Expanded(
+                  child: SlicedWheel(
+                    animation: animation,
+                    children: childrenLong,
+                  ),
+                ),
+                Expanded(
+                  child: DisappearingWheel(
+                    animation: animation,
+                    children: childrenLong,
+                  ),
+                ),
+                Expanded(
+                  child: RandomWheel(
+                    animation: animation,
+                    children: childrenLong,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 32),
+          AnimatedBuilder(
+            animation: controller,
+            builder: (context, child) => Slider(
+              value: controller.value,
+              onChanged: (value) {
+                controller.value = value;
+              },
+            ),
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          controller.forward(from: 0);
-        },
-        child: const Icon(Icons.play_arrow),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 32),
+        child: FloatingActionButton(
+          onPressed: () {
+            controller.forward(from: 0);
+          },
+          child: const Icon(Icons.play_arrow),
+        ),
       ),
     );
   }
 }
+
+final childrenLong = [
+  'Justin',
+  'Kevin',
+  'John',
+  'Sarah',
+  'Alex',
+  'Michael',
+  'Jessica',
+  'William',
+  'Ashley',
+  'Chris',
+  'Amanda',
+  'Daniel',
+  'Megan',
+  'Matthew',
+  'Emily',
+  'David',
+  'Brittany',
+  'Andrew',
+  'Stephanie',
+  'James',
+  'Samantha',
+  'Joseph',
+  'Lauren',
+  'Ryan',
+  'Nicole',
+  'Nicholas',
+  'Kayla',
+  'Robert',
+  'Melissa',
+]
+    .map(
+      (s) => Text(
+        s,
+        style: const TextStyle(
+          fontSize: 24,
+        ),
+        textAlign: TextAlign.center,
+      ),
+    )
+    .toList();
+final childrenMedium = [
+  'Justin',
+  'Kevin',
+  'John',
+  'Sarah',
+  'Alex',
+  'Michael',
+  'Jessica',
+  'William',
+  'Ashley',
+  'Chris',
+]
+    .map(
+      (s) => Text(
+        s,
+        style: const TextStyle(
+          fontSize: 24,
+        ),
+        textAlign: TextAlign.center,
+      ),
+    )
+    .toList();
+final childrenShort = [
+  'Justin',
+  'Kevin',
+]
+    .map(
+      (s) => Text(
+        s,
+        style: const TextStyle(
+          fontSize: 24,
+        ),
+        textAlign: TextAlign.center,
+      ),
+    )
+    .toList();
