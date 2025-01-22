@@ -1,6 +1,7 @@
 name: flutter_crazy_fortune_wheel
 description: "A Fortune wheel with different styles and animations."
-version: 1.0.0+1
+version: 1.0.0
+homepage: https://github.com/ikbendewilliam/flutter_crazy_fortune_wheel
 
 environment:
   sdk: ^3.6.1
