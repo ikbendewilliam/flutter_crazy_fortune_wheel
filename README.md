@@ -3,7 +3,7 @@
 [![pub package](https://img.shields.io/pub/v/flutter_crazy_fortune_wheel.svg)](https://pub.dartlang.org/packages/flutter_crazy_fortune_wheel)
 
 
-https://github.com/ikbendewilliam/flutter_crazy_fortune_wheel/blob/main/example/screenshots/example.gif?raw=true
+<image src="https://github.com/ikbendewilliam/flutter_crazy_fortune_wheel/blob/main/example/screenshots/example.gif?raw=true">
 
 ## Getting Started
 
