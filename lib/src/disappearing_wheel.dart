@@ -7,14 +7,33 @@ import 'package:flutter_crazy_fortune_wheel/src/wheel_parts/wheel_center.dart';
 import 'package:flutter_shader_snap/flutter_shader_snap.dart';
 
 class DisappearingWheel extends BaseWheel {
+  /// Creates a wheel that has its children sliced into
+  /// rings.
+  /// Add [animation] for controlling the animation of the wheel
+  /// start the animation by calling [controller.forward()]
+  /// await [controller.forward()] to wait
+  /// for the animation to finish.
+  ///
+  /// Add a curve to the animation like this and pass `animation`
+  /// ```dart
+  /// final controller = AnimationController(
+  ///   vsync: this,
+  ///   duration: Duration(seconds: 10),
+  /// );
+  /// late final animation = controller.drive(CurveTween(curve: FortuneWheelCurve()));
+  /// ```
+  ///
+  /// After the animation, you can remove the winning child
+  /// and reset the animation to go again. If you don't remove
+  /// the winner, you can set [previousWinnerIndex] so the animation
+  /// starts from the previous winner.
   DisappearingWheel({
     required super.animation,
     required super.children,
+    required super.winnerIndex,
     super.scaling,
     super.previousWinnerIndex,
     super.rotations,
-    super.winnerIndex,
-    super.onEnd,
     super.colors,
     super.key,
   });
@@ -72,7 +91,8 @@ class _WheelParts extends StatefulWidget {
   State<_WheelParts> createState() => _WheelPartsState();
 }
 
-class _WheelPartsState extends State<_WheelParts> with TickerProviderStateMixin {
+class _WheelPartsState extends State<_WheelParts>
+    with TickerProviderStateMixin {
   double _getAnimationValueForPart(int index) {
     int animatedIndex = index;
     final animationCount = widget.children.length - 1;
@@ -82,8 +102,10 @@ class _WheelPartsState extends State<_WheelParts> with TickerProviderStateMixin 
     } else if (animatedIndex > widget.winnerIndex) {
       animatedIndex -= 1;
     }
-    animatedIndex = (widget.winnerIndex * 7 + animatedIndex * 13) % animationCount;
-    return (animationValue * animationValue * (animationCount - animatedIndex)).clamp(0, 1);
+    animatedIndex =
+        (widget.winnerIndex * 7 + animatedIndex * 13) % animationCount;
+    return (animationValue * animationValue * (animationCount - animatedIndex))
+        .clamp(0, 1);
   }
 
   @override
@@ -101,14 +123,20 @@ class _WheelPartsState extends State<_WheelParts> with TickerProviderStateMixin 
                     duration: Duration(seconds: 1),
                   )..value = _getAnimationValueForPart(i),
                   child: Transform.rotate(
-                    angle: 2 * pi * (i + (widget.children.length % 2 == 0 ? 0.5 : 0)) / widget.children.length + pi * 63 / 64,
+                    angle: 2 *
+                            pi *
+                            (i + (widget.children.length % 2 == 0 ? 0.5 : 0)) /
+                            widget.children.length +
+                        pi * 63 / 64,
                     child: FractionallySizedBox(
                       alignment: Alignment.centerRight,
                       widthFactor: 0.5,
                       child: ClipPath(
-                        clipper: ArcClipper(amountOfChildren: widget.children.length),
+                        clipper: ArcClipper(
+                            amountOfChildren: widget.children.length),
                         child: Container(
-                          color: i == widget.children.length - 1 && i % widget.colors.length == 0
+                          color: i == widget.children.length - 1 &&
+                                  i % widget.colors.length == 0
                               ? widget.colors[(i + 1) % widget.colors.length]
                               : widget.colors[i % widget.colors.length],
                           child: Align(

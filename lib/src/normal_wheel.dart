@@ -6,14 +6,33 @@ import 'package:flutter_crazy_fortune_wheel/src/wheel_parts/arrow_widget.dart';
 import 'package:flutter_crazy_fortune_wheel/src/wheel_parts/color_wheel.dart';
 
 class NormalWheel extends BaseWheel {
+  /// Creates a wheel that has its children sliced into
+  /// rings.
+  /// Add [animation] for controlling the animation of the wheel
+  /// start the animation by calling [controller.forward()]
+  /// await [controller.forward()] to wait
+  /// for the animation to finish.
+  ///
+  /// Add a curve to the animation like this and pass `animation`
+  /// ```dart
+  /// final controller = AnimationController(
+  ///   vsync: this,
+  ///   duration: Duration(seconds: 10),
+  /// );
+  /// late final animation = controller.drive(CurveTween(curve: FortuneWheelCurve()));
+  /// ```
+  ///
+  /// After the animation, you can remove the winning child
+  /// and reset the animation to go again. If you don't remove
+  /// the winner, you can set [previousWinnerIndex] so the animation
+  /// starts from the previous winner.
   NormalWheel({
     required super.animation,
     required super.children,
+    required super.winnerIndex,
     super.scaling,
     super.previousWinnerIndex,
     super.rotations,
-    super.winnerIndex,
-    super.onEnd,
     super.colors,
     super.key,
   });
@@ -36,10 +55,16 @@ class NormalWheel extends BaseWheel {
               clipBehavior: Clip.none,
               children: [
                 Positioned.fill(
-                  child: animation.value == 0
+                  child: animation.value == 0 && previousWinnerIndex == 0
                       ? child!
                       : Transform.rotate(
-                          angle: animation.value * 2 * pi * (rotations + winnerIndex / children.length),
+                          angle: animation.value *
+                                  2 *
+                                  pi *
+                                  (rotations +
+                                      (previousWinnerIndex - winnerIndex) /
+                                          children.length) -
+                              2 * pi * previousWinnerIndex / children.length,
                           child: child,
                         ),
                 ),

@@ -1,5 +1,5 @@
 name: flutter_crazy_fortune_wheel
-description: "A new Flutter project."
+description: "A Fortune wheel with different styles and animations."
 version: 1.0.0+1
 
 environment:

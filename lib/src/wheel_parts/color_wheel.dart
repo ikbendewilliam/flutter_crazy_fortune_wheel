@@ -43,14 +43,17 @@ class ColorWheel extends StatelessWidget {
             for (var i = 0; i < children.length; i++) ...[
               Positioned.fill(
                 child: Transform.rotate(
-                  angle: 2 * pi * (i + (children.length % 2 == 0 ? 0.5 : 0)) / children.length + pi * 63 / 64,
+                  angle: 2 * pi * (i + 0.5) / children.length - pi * 0.02,
                   child: FractionallySizedBox(
                     alignment: Alignment.centerRight,
                     widthFactor: 0.5,
                     child: ClipPath(
                       clipper: ArcClipper(amountOfChildren: children.length),
                       child: Container(
-                        color: i == children.length - 1 && i % colors.length == 0 ? colors[(i + 1) % colors.length] : colors[i % colors.length],
+                        color:
+                            i == children.length - 1 && i % colors.length == 0
+                                ? colors[(i + 1) % colors.length]
+                                : colors[i % colors.length],
                         child: Align(
                           alignment: Alignment(0.5, 0),
                           child: FractionallySizedBox(
@@ -70,7 +73,7 @@ class ColorWheel extends StatelessWidget {
             for (var i = 0; i < children.length; i++) ...[
               Positioned.fill(
                 child: Transform.rotate(
-                  angle: 2 * pi * i / children.length - pi / 64,
+                  angle: 2 * pi * i / children.length - pi * 0.02,
                   child: Align(
                     alignment: Alignment.centerRight,
                     child: FractionallySizedBox(
@@ -86,7 +89,7 @@ class ColorWheel extends StatelessWidget {
               ),
               Positioned.fill(
                 child: Transform.rotate(
-                  angle: 2 * pi * i / children.length - pi / 64,
+                  angle: 2 * pi * i / children.length - pi * 0.02,
                   child: Align(
                     alignment: Alignment.centerRight,
                     child: Container(
@@ -140,10 +143,10 @@ class ArcClipper extends CustomClipper<Path> {
     path.arcTo(
       Rect.fromCircle(
         center: Offset(size.width, size.height / 2),
-        radius: size.height,
+        radius: 999999,
       ),
-      -pi / amountOfChildren * 1.5,
-      2 * pi / amountOfChildren * 1.5,
+      -pi / amountOfChildren,
+      2 * pi / amountOfChildren,
       false,
     );
     path.close();

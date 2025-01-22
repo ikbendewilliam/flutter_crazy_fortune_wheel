@@ -18,10 +18,13 @@ class ArrowWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var angleInFullRotation = (animationValue * 2 * pi * (rotations * childrenCount + winnerIndex)) % (2 * pi);
-    angleInFullRotation *= 8 / childrenCount; // Makes the animation work great for 3-30 children
+    var angleInFullRotation =
+        (animationValue * 2 * pi * (rotations * childrenCount + winnerIndex)) %
+            (2 * pi);
+    angleInFullRotation *=
+        8 / childrenCount; // Makes the animation work great for 3-30 children
     final double angle = switch (angleInFullRotation) {
-      _ when animationValue == 0 || animationValue == 1 => 0,
+      _ when animationValue <= 0 || animationValue == 1 => 0,
       (< 0.35 * pi) => -angleInFullRotation / 2,
       (< 0.7 * pi) => -0.35 * pi + angleInFullRotation / 2,
       _ => 0,
@@ -41,8 +44,12 @@ class _ArrowPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final path = Path();
-    path.addOval(Rect.fromCircle(center: Offset(size.width / 2, size.height / 2), radius: size.height / 2));
-    path.addOval(Rect.fromCircle(center: Offset(size.height / 4, size.height / 2), radius: size.height / 4));
+    path.addOval(Rect.fromCircle(
+        center: Offset(size.width / 2, size.height / 2),
+        radius: size.height / 2));
+    path.addOval(Rect.fromCircle(
+        center: Offset(size.height / 4, size.height / 2),
+        radius: size.height / 4));
     path.moveTo(size.height / 4, size.height / 2 - size.height / 4);
     path.lineTo(size.width / 2, 0);
     path.lineTo(size.width / 2, size.height);

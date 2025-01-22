@@ -17,7 +17,7 @@ class RandomWheel extends StatefulWidget {
   ///   vsync: this,
   ///   duration: Duration(seconds: 10),
   /// );
-  /// final animation = controller.drive(CurveTween(curve: Curves.easeInOut));
+  /// late final animation = controller.drive(CurveTween(curve: FortuneWheelCurve()));
   /// ```
   final Animation<double> animation;
 
@@ -36,10 +36,6 @@ class RandomWheel extends StatefulWidget {
   /// The children of the wheel
   final List<Widget> children;
 
-  /// Callback for when the animation is done
-  /// the winner index is passed as an argument
-  final void Function(int winnerIndex)? onEnd;
-
   /// Which colors to use, defaults to
   /// (a subset of) [Colors.accents].
   /// When there are more children than colors,
@@ -50,16 +46,15 @@ class RandomWheel extends StatefulWidget {
   /// The index of the winner in the children list
   /// if this is null the wheel will decide the winner.
   /// The winner is then returned in the [widget.onEnd] callback
-  late final int? winnerIndex;
+  final int winnerIndex;
 
   RandomWheel({
     required this.animation,
     required this.children,
+    required this.winnerIndex,
     this.scaling = 1,
     this.previousWinnerIndex = 0,
     this.rotations = 10,
-    this.winnerIndex,
-    this.onEnd,
     this.colors,
     super.key,
   });
@@ -69,15 +64,15 @@ class RandomWheel extends StatefulWidget {
 }
 
 class _RandomWheelState extends State<RandomWheel> {
-  var _wheelType = _WheelType.values[Random().nextInt(_WheelType.values.length)];
+  var _wheelType =
+      _WheelType.values[Random().nextInt(_WheelType.values.length)];
 
   @override
   void didUpdateWidget(covariant RandomWheel oldWidget) {
-    if (oldWidget.children.length != widget.children.length || oldWidget.winnerIndex != widget.winnerIndex || oldWidget.previousWinnerIndex != widget.previousWinnerIndex) {
-      setState(() {
-        _wheelType = _WheelType.values[Random().nextInt(_WheelType.values.length)];
-      });
-    }
+    setState(() {
+      _wheelType =
+          _WheelType.values[Random().nextInt(_WheelType.values.length)];
+    });
     super.didUpdateWidget(oldWidget);
   }
 
@@ -91,7 +86,6 @@ class _RandomWheelState extends State<RandomWheel> {
           previousWinnerIndex: widget.previousWinnerIndex,
           rotations: widget.rotations,
           winnerIndex: widget.winnerIndex,
-          onEnd: widget.onEnd,
           colors: widget.colors,
         ),
       _WheelType.sliced => SlicedWheel(
@@ -101,7 +95,6 @@ class _RandomWheelState extends State<RandomWheel> {
           previousWinnerIndex: widget.previousWinnerIndex,
           rotations: widget.rotations,
           winnerIndex: widget.winnerIndex,
-          onEnd: widget.onEnd,
           colors: widget.colors,
         ),
       _WheelType.disappearing => DisappearingWheel(
@@ -111,7 +104,6 @@ class _RandomWheelState extends State<RandomWheel> {
           previousWinnerIndex: widget.previousWinnerIndex,
           rotations: widget.rotations,
           winnerIndex: widget.winnerIndex,
-          onEnd: widget.onEnd,
           colors: widget.colors,
         ),
     };

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_crazy_fortune_wheel/flutter_crazy_fortune_wheel.dart';
 
@@ -36,11 +38,43 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     vsync: this,
     duration: const Duration(seconds: 10),
   );
-  late final animation = controller.drive(CurveTween(curve: FortuneWheelCurve()));
+  late final animation =
+      controller.drive(CurveTween(curve: FortuneWheelCurve()));
+
+  final _childrenLong = childrenLong;
+  var _childrenLongWinnerIndex = 0;
+  var _childrenMediumWinnerIndex = 0;
 
   @override
   void initState() {
     super.initState();
+    _setNextWinnerIndex();
+  }
+
+  void _startAnimation() {
+    if (animation.status == AnimationStatus.dismissed) {
+      setState(() {
+        _setNextWinnerIndex();
+      });
+      controller.forward();
+    } else {
+      setState(() {
+        controller.value = 0;
+        _removeWinner();
+      });
+    }
+  }
+
+  void _setNextWinnerIndex() {
+    _childrenMediumWinnerIndex = Random.secure().nextInt(childrenMedium.length);
+    _childrenLongWinnerIndex = Random.secure().nextInt(_childrenLong.length);
+  }
+
+  void _removeWinner() {
+    setState(() {
+      if (_childrenLong.length > 2)
+        _childrenLong.removeAt(_childrenLongWinnerIndex);
+    });
   }
 
   @override
@@ -83,24 +117,32 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                 Expanded(
                   child: NormalWheel(
                     animation: animation,
+                    winnerIndex: 1,
+                    previousWinnerIndex: 1,
                     children: childrenShort,
                   ),
                 ),
                 Expanded(
                   child: SlicedWheel(
                     animation: animation,
+                    winnerIndex: 1,
+                    previousWinnerIndex: 1,
                     children: childrenShort,
                   ),
                 ),
                 Expanded(
                   child: DisappearingWheel(
                     animation: animation,
+                    winnerIndex: 1,
+                    previousWinnerIndex: 1,
                     children: childrenShort,
                   ),
                 ),
                 Expanded(
                   child: RandomWheel(
                     animation: animation,
+                    winnerIndex: 1,
+                    previousWinnerIndex: 1,
                     children: childrenShort,
                   ),
                 ),
@@ -114,24 +156,28 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                 Expanded(
                   child: NormalWheel(
                     animation: animation,
+                    winnerIndex: _childrenMediumWinnerIndex,
                     children: childrenMedium,
                   ),
                 ),
                 Expanded(
                   child: SlicedWheel(
                     animation: animation,
+                    winnerIndex: _childrenMediumWinnerIndex,
                     children: childrenMedium,
                   ),
                 ),
                 Expanded(
                   child: DisappearingWheel(
                     animation: animation,
+                    winnerIndex: _childrenMediumWinnerIndex,
                     children: childrenMedium,
                   ),
                 ),
                 Expanded(
                   child: RandomWheel(
                     animation: animation,
+                    winnerIndex: _childrenMediumWinnerIndex,
                     children: childrenMedium,
                   ),
                 ),
@@ -145,24 +191,28 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                 Expanded(
                   child: NormalWheel(
                     animation: animation,
+                    winnerIndex: _childrenLongWinnerIndex,
                     children: childrenLong,
                   ),
                 ),
                 Expanded(
                   child: SlicedWheel(
                     animation: animation,
+                    winnerIndex: _childrenLongWinnerIndex,
                     children: childrenLong,
                   ),
                 ),
                 Expanded(
                   child: DisappearingWheel(
                     animation: animation,
+                    winnerIndex: _childrenLongWinnerIndex,
                     children: childrenLong,
                   ),
                 ),
                 Expanded(
                   child: RandomWheel(
                     animation: animation,
+                    winnerIndex: _childrenLongWinnerIndex,
                     children: childrenLong,
                   ),
                 ),
@@ -183,11 +233,26 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       ),
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 32),
-        child: FloatingActionButton(
-          onPressed: () {
-            controller.forward(from: 0);
-          },
-          child: const Icon(Icons.play_arrow),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            FloatingActionButton(
+              onPressed: () {
+                setState(() {
+                  _childrenLong.add(
+                      _childrenLong[Random().nextInt(_childrenLong.length)]);
+                });
+              },
+              child: Icon(Icons.plus_one),
+            ),
+            const SizedBox(height: 16),
+            FloatingActionButton(
+              onPressed: _startAnimation,
+              child: Icon(animation.status == AnimationStatus.dismissed
+                  ? Icons.play_arrow
+                  : Icons.replay_sharp),
+            ),
+          ],
         ),
       ),
     );
@@ -258,8 +323,9 @@ final childrenMedium = [
     )
     .toList();
 final childrenShort = [
-  'Justin',
-  'Kevin',
+  '0Justin',
+  '1Kevin',
+  '2John',
 ]
     .map(
       (s) => Text(

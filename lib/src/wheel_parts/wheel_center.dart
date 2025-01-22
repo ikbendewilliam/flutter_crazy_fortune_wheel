@@ -61,8 +61,10 @@ class _SpiralPainter extends CustomPainter {
         clockwise: false,
       );
       path.quadraticBezierTo(
-        size.width / 2 - size.width / 4 * cos(pi / 2 + angleStart - sweepAngle / 2),
-        size.height / 2 - size.width / 4 * sin(pi / 2 + angleStart - sweepAngle / 2),
+        size.width / 2 -
+            size.width / 4 * cos(pi / 2 + angleStart - sweepAngle / 2),
+        size.height / 2 -
+            size.width / 4 * sin(pi / 2 + angleStart - sweepAngle / 2),
         size.width / 2,
         size.height / 2,
       );
