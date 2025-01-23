@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_crazy_fortune_wheel/src/disappearing_wheel.dart';
 import 'package:flutter_crazy_fortune_wheel/src/normal_wheel.dart';
@@ -48,10 +46,16 @@ class RandomWheel extends StatefulWidget {
   /// The winner is then returned in the [widget.onEnd] callback
   final int winnerIndex;
 
+  /// Which type of wheel to use
+  /// Use `WheelType.values[Random().nextInt(WheelType.values.length)];`
+  /// to get a random wheel type and change it when you want to.
+  final WheelType wheelType;
+
   RandomWheel({
     required this.animation,
     required this.children,
     required this.winnerIndex,
+    required this.wheelType,
     this.scaling = 1,
     this.previousWinnerIndex = 0,
     this.rotations = 10,
@@ -64,22 +68,10 @@ class RandomWheel extends StatefulWidget {
 }
 
 class _RandomWheelState extends State<RandomWheel> {
-  var _wheelType =
-      _WheelType.values[Random().nextInt(_WheelType.values.length)];
-
-  @override
-  void didUpdateWidget(covariant RandomWheel oldWidget) {
-    setState(() {
-      _wheelType =
-          _WheelType.values[Random().nextInt(_WheelType.values.length)];
-    });
-    super.didUpdateWidget(oldWidget);
-  }
-
   @override
   Widget build(BuildContext context) {
-    return switch (_wheelType) {
-      _WheelType.normal => NormalWheel(
+    return switch (widget.wheelType) {
+      WheelType.normal => NormalWheel(
           animation: widget.animation,
           children: widget.children,
           scaling: widget.scaling,
@@ -88,7 +80,7 @@ class _RandomWheelState extends State<RandomWheel> {
           winnerIndex: widget.winnerIndex,
           colors: widget.colors,
         ),
-      _WheelType.sliced => SlicedWheel(
+      WheelType.sliced => SlicedWheel(
           animation: widget.animation,
           children: widget.children,
           scaling: widget.scaling,
@@ -97,7 +89,7 @@ class _RandomWheelState extends State<RandomWheel> {
           winnerIndex: widget.winnerIndex,
           colors: widget.colors,
         ),
-      _WheelType.disappearing => DisappearingWheel(
+      WheelType.disappearing => DisappearingWheel(
           animation: widget.animation,
           children: widget.children,
           scaling: widget.scaling,
@@ -110,7 +102,7 @@ class _RandomWheelState extends State<RandomWheel> {
   }
 }
 
-enum _WheelType {
+enum WheelType {
   normal,
   sliced,
   disappearing,
